@@ -2,9 +2,12 @@ import { useState } from "react";
 import RecipeCard from "../../Molecules/RecipeCard/RecipeCard";
 import recipesData from "../../../data/recipes.json";
 import "./RecipeSearch.scss";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function RecipeSearch() {
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { user } = useAuth();
 
   const filteredRecipes = recipesData.filter((recipe) =>
     `${recipe.title} ${recipe.description}`
@@ -21,6 +24,12 @@ export default function RecipeSearch() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      {user && (
+        // eslint-disable-next-line no-undef
+        <button onClick={() => setShowForm(true)}>
+          ➕ Ajouter une recette
+        </button>
+      )}
       <div className="recipe-search-results">
         {filteredRecipes.length > 0 ? (
           filteredRecipes.map((recipe) => (
