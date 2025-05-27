@@ -1,71 +1,27 @@
+import { useAuth } from "@context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
 
 export default function Register() {
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // TEST INSCPRITION
-    const testToken = "user_token_123";
-    const newUser = {
-      username: form.username,
-      email: form.email,
-    };
-
-    login(newUser, testToken);
-
-    navigate("/");
+    const { email, password, displayName } = e.target.elements;
+    const result = await signup(email.value, password.value, displayName.value);
+    if (result.success) {
+      navigate("/");
+    }
   };
 
   return (
     <div>
-      <h2>Inscritpion</h2>
+      <h2>Register</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nom d'utilisateur :</label>
-          <input
-            type="text"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Adresse email :</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Mot de passe :</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Créer un compte</button>
+        <input type="text" name="displayName" placeholder="Display Name" />
+        <input type="email" name="email" placeholder="Email" />
+        <input type="password" name="password" placeholder="Password" />
+        <button type="submit">Register</button>
       </form>
     </div>
   );

@@ -1,9 +1,9 @@
 import "./Header.scss";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   return (
     <header className="header">
@@ -13,7 +13,7 @@ export default function Header() {
         </NavLink>
       </div>
       <nav className="header-nav">
-        {!user ? (
+        {!currentUser ? (
           <>
             <NavLink to="/login" className="login_link">
               Connexion
@@ -23,11 +23,14 @@ export default function Header() {
             </NavLink>
           </>
         ) : (
-          <>
+          <div className="user-menu">
+            <span className="welcome-msg">
+              Bienvenue, {currentUser.displayName}
+            </span>
             <button className="logout-btn" onClick={logout}>
               Déconnexion
             </button>
-          </>
+          </div>
         )}
       </nav>
     </header>

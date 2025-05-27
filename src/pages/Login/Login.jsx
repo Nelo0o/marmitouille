@@ -1,21 +1,27 @@
+import { useAuth } from "@context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const testUser = { username: "Jean-mi", email: "jean@test.com" };
-    const testToken = "123456";
-    login(testUser, testToken);
-    navigate("/");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { email, password } = e.target.elements;
+    const result = await login(email.value, password.value);
+    if (result.success) {
+      navigate("/");
+    }
   };
 
   return (
     <div>
       <h2>Connexion</h2>
-      <button onClick={handleLogin}>Se connecter (test)</button>
+      <form onSubmit={handleSubmit}>
+        <input type="email" name="email" placeholder="Email" />
+        <input type="password" name="password" placeholder="Mot de passe" />
+        <button type="submit">Se connecter</button>
+      </form>
     </div>
   );
 }

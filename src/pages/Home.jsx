@@ -1,5 +1,4 @@
-import RecipeCard from "../components/Molecules/RecipeCard/RecipeCard";
-import fatal from "../assets/fatal.png";
+import RecipeCard from "@components/molecules/RecipeCard/RecipeCard";
 
 export default function Home() {
   return (
@@ -7,9 +6,9 @@ export default function Home() {
       <h1 style={{ color: "red" }}>Home</h1>
       <RecipeCard
         title="Spaghetti Carbonara"
-        image={fatal}
+        image="https://placehold.co/400"
         description="Un plat italien délicieux avec œuf, fromage et lardons."
-      />
+        />
     </div>
   );
 }

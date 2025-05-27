@@ -1,4 +1,4 @@
-import "../RecipeCard/RecipeCard.scss";
+import "./RecipeCard.scss";
 
 export default function RecipeCard({ title, image, description, onClick }) {
   return (

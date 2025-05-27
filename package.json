@@ -11,6 +11,9 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@firebase/auth": "^1.10.6",
+    "@firebase/firestore": "^4.7.16",
+    "@firebase/storage": "^0.13.12",
     "dotenv": "^16.5.0",
     "firebase": "^11.8.1",
     "react": "^19.1.0",
@@ -29,6 +32,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "jsdom": "^26.1.0",
+    "path": "^0.12.7",
     "sass": "^1.89.0",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"

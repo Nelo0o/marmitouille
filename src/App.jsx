@@ -1,9 +1,8 @@
-import "./firebaseTest";
-import Home from "./pages/Home";
-import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
+import Home from "@pages/Home";
+import Login from "@pages/Login/Login";
+import Register from "@pages/Register/Register";
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Atoms/Header/Header";
+import Header from "@components/atoms/Header/Header";
 
 function App() {
   return (
