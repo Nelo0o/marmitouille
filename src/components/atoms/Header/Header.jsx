@@ -27,17 +27,17 @@ export default function Header() {
     <>
       <header className="header">
         <div className="header-left">
-          <NavLink to="/" className="logo">
+          <NavLink data-testId="navLinkLogo" to="/" className="logo">
             Marmitouille
           </NavLink>
         </div>
         <nav className="header-nav">
           {!currentUser ? (
             <>
-              <NavLink to="/login" className="login_link">
+              <NavLink data-testId="navLinkLogin" to="/login" className="login_link">
                 Connexion
               </NavLink>
-              <NavLink to="/register" className="register_link">
+              <NavLink data-testId="navLinkRegister" to="/register" className="register_link">
                 Inscription
               </NavLink>
             </>
@@ -52,7 +52,7 @@ export default function Header() {
                 <div className="user-menu__avatar">
                   {currentUser.displayName?.charAt(0).toUpperCase() || "U"}
                 </div>
-                <span className="user-menu__name">{currentUser.displayName}</span>
+                <span data-testId="spanWelcome" className="user-menu__name">{currentUser.displayName}</span>
               </button>
               {isPopoverOpen && (
                 <div className="user-menu__popover">
@@ -73,6 +73,7 @@ export default function Header() {
                     Mes recettes
                   </NavLink>
                   <button 
+                    data-testId="buttonLogout"
                     className="user-menu__item user-menu__logout" 
                     onClick={() => {
                       setShowLogoutConfirm(true);
