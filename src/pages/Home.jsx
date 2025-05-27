@@ -1,9 +1,15 @@
-import Header from "../components/atoms/Header/Header";
+import RecipeCard from "../components/Molecules/RecipeCard/RecipeCard";
+import fatal from "../assets/fatal.png";
 
 export default function Home() {
   return (
-    <>
-      <h1>Home</h1>
-    </>
+    <div style={{ padding: "2rem" }}>
+      <h1 style={{ color: "red" }}>Home</h1>
+      <RecipeCard
+        title="Spaghetti Carbonara"
+        image={fatal}
+        description="Un plat italien délicieux avec œuf, fromage et lardons."
+      />
+    </div>
   );
 }
