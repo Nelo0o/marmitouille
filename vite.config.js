@@ -18,4 +18,9 @@ export default defineConfig({
       '@services': path.resolve(__dirname, './src/services'),
     },
   },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/setupTest.js' 
+  },
 });

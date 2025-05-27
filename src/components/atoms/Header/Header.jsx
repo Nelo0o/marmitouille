@@ -8,26 +8,26 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-left">
-        <NavLink to="/" className="logo">
+        <NavLink data-testId="navLinkLogo" to="/" className="logo">
           MARMITOUILLE
         </NavLink>
       </div>
       <nav className="header-nav">
         {!currentUser ? (
           <>
-            <NavLink to="/login" className="login_link">
+            <NavLink data-testId="navLinkLogin" to="/login" className="login_link">
               Connexion
             </NavLink>
-            <NavLink to="/register" className="register_link">
+            <NavLink data-testId="navLinkRegister" to="/register" className="register_link">
               Inscription
             </NavLink>
           </>
         ) : (
           <div className="user-menu">
-            <span className="welcome-msg">
+            <span data-testId="spanWelcome" className="welcome-msg">
               Bienvenue, {currentUser.displayName}
             </span>
-            <button className="logout-btn" onClick={logout}>
+            <button data-testId="buttonLogout" className="logout-btn" onClick={logout}>
               Déconnexion
             </button>
           </div>
