@@ -9,7 +9,7 @@ export default function Header() {
     <header className="header">
       <div className="header-left">
         <NavLink to="/" className="logo">
-          MARMITOUILLE
+          Marmitouille
         </NavLink>
       </div>
       <nav className="header-nav">

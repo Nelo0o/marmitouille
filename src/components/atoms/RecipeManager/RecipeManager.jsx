@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import RecipeCard from "../../Molecules/RecipeCard/RecipeCard";
+import { useAuth } from "@context/AuthContext";
+import RecipeCard from "@molecules/RecipeCard/RecipeCard";
 import "./RecipeManager.scss";
 import {
   collection,
@@ -12,7 +12,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { db } from "@firebase-config";
 
 export default function RecipeManager() {
   const { currentUser } = useAuth();

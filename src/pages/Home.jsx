@@ -1,21 +1,13 @@
-import RecipeSearch from "../components/Atoms/RecipeSearch/RecipeSearch";
-import RecipeManager from "../components/Atoms/RecipeManager/RecipeManager";
-import { useAuth } from "../context/AuthContext";
+import Hero from "@components/atoms/Hero/Hero";
 
 export default function Home() {
-  const { currentUser } = useAuth();
-
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1 style={{ color: "red" }}>Accueil</h1>
-      {currentUser ? (
-        <RecipeManager />
-      ) : (
-        <p style={{ marginTop: "2rem" }}>
-          Attention: Connectez-vous pour gérer vos recettes
-        </p>
-      )}
-      <RecipeSearch />
+    <div className="container">
+      <Hero 
+        title="Bienvenue sur Marmitouille" 
+        subtitle="Découvrez des recettes délicieuses et faciles à préparer" 
+        backgroundImage="https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"
+      />
     </div>
   );
 }

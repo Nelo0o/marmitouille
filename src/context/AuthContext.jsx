@@ -7,7 +7,7 @@ import {
   updateProfile
 } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "@/firebase";
+import { auth, db } from "@firebase-config";
 
 const AuthContext = createContext();
 

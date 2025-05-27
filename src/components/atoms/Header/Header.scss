@@ -1,18 +1,126 @@
+@use "@styles/variables" as *;
+@use "sass:color";
+
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md $spacing-lg;
+  background-color: $color-white;
+  box-shadow: $shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+  width: 100%;
+
+  &-left {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background-color: antiquewhite;
-    border-bottom: 1px solid #ddd;
-}
+  }
 
-.logo {
-    text-decoration: none;
-    color: chocolate;
-}
-
-.header-nav {
+  &-nav {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-family: 'Dancing Script', cursive;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    letter-spacing: 0.5px;
+    transition: all $transition-fast;
+    text-decoration: none;
+    
+    img {
+      width: 32px;
+      height: 32px;
+      transition: transform $transition-fast;
+    }
+    
+    &:hover {
+      color: color.adjust($color-primary, $lightness: -10%);
+      
+      img {
+        transform: rotate(10deg);
+      }
+    }
+  }
+
+  .login_link,
+  .register_link {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $border-radius-md;
+    transition: all $transition-fast;
+  }
+
+  .login_link {
+    color: $color-primary;
+    border: 1px solid $color-primary;
+
+    &:hover {
+      background-color: rgba($color-primary, 0.1);
+    }
+  }
+
+  .register_link {
+    color: $color-white;
+    background-color: $color-primary;
+
+    &:hover {
+      background-color: color.adjust($color-primary, $lightness: -10%);
+    }
+  }
+
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    .welcome-msg {
+      font-size: $font-size-sm;
+      color: $color-gray-700;
+    }
+
+    .logout-btn {
+      background-color: transparent;
+      border: 1px solid $color-gray-400;
+      color: $color-gray-700;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      padding: $spacing-xs $spacing-md;
+      border-radius: $border-radius-md;
+      cursor: pointer;
+      transition: all $transition-fast;
+
+      &:hover {
+        background-color: $color-gray-200;
+        border-color: $color-gray-500;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    flex-direction: column;
+    padding: $spacing-sm;
+    gap: $spacing-sm;
+
+    &-left,
+    &-nav {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .user-menu {
+      flex-direction: column;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+  }
 }
