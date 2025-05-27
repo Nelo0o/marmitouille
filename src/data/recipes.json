@@ -3,7 +3,7 @@
         "id": 1,
         "title": "Spaghetti Carbonara",
         "description": "Un classique italien rapide et délicieux.",
-        "image": "https://source.unsplash.com/600x400/?pasta",
+        "image": "https://placehold.co/600x400?text=Spaghetti+Carbonara&font=roboto",
         "ingredients": [
             "200g de spaghetti",
             "100g de lardons",
@@ -25,7 +25,7 @@
         "id": 2,
         "title": "Poulet au curry",
         "description": "Un plat parfumé aux saveurs indiennes.",
-        "image": "https://source.unsplash.com/600x400/?curry",
+        "image": "https://placehold.co/600x400?text=Poulet+au+curry&font=roboto",
         "ingredients": [
             "400g de blanc de poulet",
             "1 oignon",
@@ -47,7 +47,7 @@
         "id": 3,
         "title": "Salade César",
         "description": "Une salade croquante avec poulet et parmesan.",
-        "image": "https://source.unsplash.com/600x400/?salad",
+        "image": "https://placehold.co/600x400?text=Salade+César&font=roboto",
         "ingredients": [
             "Salade romaine",
             "Blanc de poulet",
@@ -68,7 +68,7 @@
         "id": 4,
         "title": "Lasagnes bolognaise",
         "description": "Des lasagnes riches et gratinées.",
-        "image": "https://source.unsplash.com/600x400/?lasagna",
+        "image": "https://placehold.co/600x400?text=Lasagne+Bolognaise&font=roboto",
         "ingredients": [
             "Pâtes à lasagnes",
             "Viande hachée",
@@ -89,7 +89,7 @@
         "id": 5,
         "title": "Soupe de potiron",
         "description": "Une soupe onctueuse et réconfortante.",
-        "image": "https://source.unsplash.com/600x400/?pumpkin-soup",
+        "image": "https://placehold.co/600x400?text=Soupe+de+potiron&font=roboto",
         "ingredients": [
             "500g de potiron",
             "1 pomme de terre",
@@ -110,7 +110,7 @@
         "id": 6,
         "title": "Tacos mexicains",
         "description": "Tortillas garnies de viande et légumes.",
-        "image": "https://source.unsplash.com/600x400/?tacos",
+        "image": "https://placehold.co/600x400?text=Tacos+mexicains&font=roboto",
         "ingredients": [
             "Tortillas",
             "Bœuf haché",
@@ -131,7 +131,7 @@
         "id": 7,
         "title": "Pizza maison",
         "description": "La classique marguerita à faire chez soi.",
-        "image": "https://source.unsplash.com/600x400/?pizza",
+        "image": "https://placehold.co/600x400?text=Pizza+Maison&font=roboto",
         "ingredients": [
             "Pâte à pizza",
             "Sauce tomate",
@@ -152,7 +152,7 @@
         "id": 8,
         "title": "Ratatouille",
         "description": "Un plat de légumes méditerranéens mijotés.",
-        "image": "https://source.unsplash.com/600x400/?ratatouille",
+        "image": "https://placehold.co/600x400?text=Ratatouille&font=roboto",
         "ingredients": [
             "Courgettes, aubergines",
             "Poivrons, tomates",
@@ -173,7 +173,7 @@
         "id": 9,
         "title": "Quiche lorraine",
         "description": "Une tarte salée à base de lardons et œufs.",
-        "image": "https://source.unsplash.com/600x400/?quiche",
+        "image": "https://placehold.co/600x400?text=Quiche+Lorraine&font=roboto",
         "ingredients": [
             "Pâte brisée",
             "200g de lardons",
@@ -194,7 +194,7 @@
         "id": 10,
         "title": "Couscous royal",
         "description": "Un plat généreux aux multiples viandes et légumes.",
-        "image": "https://source.unsplash.com/600x400/?couscous",
+        "image": "https://placehold.co/600x400?text=Couscous+royal&font=roboto",
         "ingredients": [
             "Semoule de couscous",
             "Poulet, merguez, agneau",
