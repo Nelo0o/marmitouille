@@ -8,17 +8,17 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-left">
-        <NavLink to="/" className="logo">
+        <NavLink to="/" data-testid="navLinkLogo" className="logo">
           MARMITOUILLE
         </NavLink>
       </div>
       <nav className="header-nav">
         {!currentUser ? (
           <>
-            <NavLink to="/login" className="login_link">
+            <NavLink to="/login" data-testid="navLinkLogin" className="login_link">
               Connexion
             </NavLink>
-            <NavLink to="/register" className="register_link">
+            <NavLink to="/register" data-testid="navLinkRegister" className="register_link">
               Inscription
             </NavLink>
           </>
