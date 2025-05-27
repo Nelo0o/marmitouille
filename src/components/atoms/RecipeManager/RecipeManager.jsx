@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@context/AuthContext";
 import RecipeCard from "@molecules/RecipeCard/RecipeCard";
+import ConfirmDialog from "@atoms/ConfirmDialog/ConfirmDialog";
 import "./RecipeManager.scss";
 import {
   collection,
@@ -18,6 +19,8 @@ export default function RecipeManager() {
   const { currentUser } = useAuth();
   const [recipes, setRecipes] = useState([]);
   const [editing, setEditing] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [recipeToDelete, setRecipeToDelete] = useState(null);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -101,10 +104,19 @@ export default function RecipeManager() {
     resetForm();
   };
 
-  // Supprimer une recette
-  const handleDelete = async (id) => {
-    await deleteDoc(doc(db, "recipes", id));
-    setRecipes((prev) => prev.filter((r) => r.id !== id));
+  // Ouvrir la modale de confirmation pour supprimer une recette
+  const confirmDelete = (recipe) => {
+    setRecipeToDelete(recipe);
+    setDeleteConfirmOpen(true);
+  };
+
+  // Supprimer une recette après confirmation
+  const handleDelete = async () => {
+    if (!recipeToDelete) return;
+    
+    await deleteDoc(doc(db, "recipes", recipeToDelete.id));
+    setRecipes((prev) => prev.filter((r) => r.id !== recipeToDelete.id));
+    setRecipeToDelete(null);
   };
 
   const handleEdit = (recipe) => {
@@ -122,91 +134,132 @@ export default function RecipeManager() {
 
   return (
     <div className="recipe-manager">
-      <h2>Gérer mes recettes</h2>
+      <h2>{editing ? "Modifier une recette" : "Ajouter une nouvelle recette"}</h2>
 
       <form className="recipe-form" onSubmit={handleSubmit}>
-        <input
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          placeholder="Nom de la recette"
-          required
-        />
-
-        <input
-          name="image"
-          value={form.image}
-          onChange={handleChange}
-          placeholder="URL de l'image"
-        />
-
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          placeholder="Description"
-          required
-        />
-
-        <div>
-          <label>Ingrédients :</label>
-          {form.ingredients.map((ing, i) => (
-            <input
-              key={i}
-              value={ing}
-              onChange={(e) =>
-                handleListChange("ingredients", i, e.target.value)
-              }
-              placeholder={`Ingrédient ${i + 1}`}
-            />
-          ))}
-          <button type="button" onClick={() => addToList("ingredients")}>
-            + Ajouter ingrédient
-          </button>
-        </div>
-
-        <div>
-          <label>Étapes :</label>
-          {form.steps.map((step, i) => (
-            <textarea
-              key={i}
-              value={step}
-              onChange={(e) => handleListChange("steps", i, e.target.value)}
-              placeholder={`Étape ${i + 1}`}
-            />
-          ))}
-          <button type="button" onClick={() => addToList("steps")}>
-            + Ajouter étape
-          </button>
-        </div>
-
-        <label>
-          Difficulté :
-          <select
-            name="difficulty"
-            value={form.difficulty}
+        <div className="form-section">
+          <label htmlFor="title">Nom de la recette</label>
+          <input
+            id="title"
+            name="title"
+            value={form.title}
             onChange={handleChange}
-          >
-            <option value="facile">Facile</option>
-            <option value="moyen">Moyen</option>
-            <option value="difficile">Difficile</option>
-          </select>
-        </label>
+            placeholder="Ex: Ratatouille provençale"
+            required
+          />
+        </div>
 
-        <label>
-          Coût :
-          <select name="cost" value={form.cost} onChange={handleChange}>
-            <option value="€">€</option>
-            <option value="€€">€€</option>
-            <option value="€€€">€€€</option>
-          </select>
-        </label>
+        <div className="form-section">
+          <label htmlFor="image">URL de l'image</label>
+          <input
+            id="image"
+            name="image"
+            value={form.image}
+            onChange={handleChange}
+            placeholder="https://example.com/image.jpg"
+          />
+        </div>
+
+        <div className="form-section">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            placeholder="Décrivez votre recette en quelques phrases..."
+            required
+          />
+        </div>
+
+        <div className="form-section">
+          <label>Ingrédients</label>
+          {form.ingredients.map((ing, i) => (
+            <div key={i} className="list-item">
+              <input
+                value={ing}
+                onChange={(e) =>
+                  handleListChange("ingredients", i, e.target.value)
+                }
+                placeholder={`Ingrédient ${i + 1} (ex: 200g de tomates)`}
+              />
+            </div>
+          ))}
+          <button 
+            type="button" 
+            onClick={() => addToList("ingredients")}
+            className="add-button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Ajouter un ingrédient
+          </button>
+        </div>
+
+        <div className="form-section">
+          <label>Étapes de préparation</label>
+          {form.steps.map((step, i) => (
+            <div key={i} className="list-item">
+              <div className="step-number">{i + 1}</div>
+              <textarea
+                value={step}
+                onChange={(e) => handleListChange("steps", i, e.target.value)}
+                placeholder={`Décrivez l'étape ${i + 1}...`}
+              />
+            </div>
+          ))}
+          <button 
+            type="button" 
+            onClick={() => addToList("steps")}
+            className="add-button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Ajouter une étape
+          </button>
+        </div>
+
+        <div className="form-row">
+          <div className="form-section form-section--half">
+            <label htmlFor="difficulty">Difficulté</label>
+            <select
+              id="difficulty"
+              name="difficulty"
+              value={form.difficulty}
+              onChange={handleChange}
+            >
+              <option value="facile">Facile</option>
+              <option value="moyen">Moyen</option>
+              <option value="difficile">Difficile</option>
+            </select>
+          </div>
+
+          <div className="form-section form-section--half">
+            <label htmlFor="cost">Coût</label>
+            <select 
+              id="cost"
+              name="cost" 
+              value={form.cost} 
+              onChange={handleChange}
+            >
+              <option value="€">€ - Économique</option>
+              <option value="€€">€€ - Modéré</option>
+              <option value="€€€">€€€ - Assez cher</option>
+            </select>
+          </div>
+        </div>
 
         <div className="form-buttons">
-          <button type="submit">{editing ? "Modifier" : "Ajouter"}</button>
+          <button type="submit" className="primary-button">
+            {editing ? "Enregistrer les modifications" : "Ajouter cette recette"}
+          </button>
           {editing && (
-            <button type="button" onClick={resetForm}>
-              Annuler
+            <button type="button" onClick={resetForm} className="secondary-button">
+              Annuler les modifications
             </button>
           )}
         </div>
@@ -214,26 +267,69 @@ export default function RecipeManager() {
 
       <hr />
 
+      <h2>Mes recettes ({recipes.length})</h2>
+      
       <div className="recipe-list">
-        {recipes.length === 0 && <p>Aucune recette pour le moment.</p>}
+        {recipes.length === 0 && (
+          <div className="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+              <path d="M9 18h6"></path>
+              <path d="M10 22h4"></path>
+            </svg>
+            <p>Vous n'avez pas encore créé de recettes.</p>
+            <p>Commencez par ajouter votre première recette ci-dessus !</p>
+          </div>
+        )}
         {recipes.map((r) => (
-          <div key={r.id} className="recipe-wrapper">
+          <div key={r.id} className="recipe-item">
             <RecipeCard
               title={r.title}
-              image={r.image}
+              image={r.image || 'https://via.placeholder.com/300x200?text=Pas+d\'image'}
               description={r.description}
+              difficulty={r.difficulty}
+              cost={r.cost}
+              onClick={() => handleEdit(r)}
+              actions={
+                <div className="recipe-actions">
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(r);
+                  }} className="edit-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Modifier
+                  </button>
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    confirmDelete(r);
+                  }} className="delete-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    Supprimer
+                  </button>
+                </div>
+              }
             />
-            <p>
-              <strong>Difficulté :</strong> {r.difficulty} |{" "}
-              <strong>Coût :</strong> {r.cost}
-            </p>
-            <div>
-              <button onClick={() => handleEdit(r)}>Modifier</button>
-              <button onClick={() => handleDelete(r.id)}>Supprimer</button>
-            </div>
           </div>
         ))}
       </div>
+      
+      <ConfirmDialog
+        isOpen={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        onConfirm={handleDelete}
+        title="Supprimer cette recette"
+        message={recipeToDelete ? `Êtes-vous sûr de vouloir supprimer la recette "${recipeToDelete.title}" ? Cette action est irréversible.` : "Êtes-vous sûr de vouloir supprimer cette recette ?"}
+        confirmText="Supprimer"
+        cancelText="Annuler"
+      />
     </div>
   );
 }
