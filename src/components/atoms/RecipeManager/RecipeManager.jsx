@@ -284,8 +284,9 @@ export default function RecipeManager() {
         {recipes.map((r) => (
           <div key={r.id} className="recipe-item">
             <RecipeCard
+              id={r.id}
               title={r.title}
-              image={r.image || 'https://via.placeholder.com/300x200?text=Pas+d\'image'}
+              image={r.image || 'https://placehold.co/400'}
               description={r.description}
               difficulty={r.difficulty}
               cost={r.cost}

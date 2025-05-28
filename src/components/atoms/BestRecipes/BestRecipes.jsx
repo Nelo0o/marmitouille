@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./BestRecipes.scss";
 import RecipeCard from "@molecules/RecipeCard/RecipeCard";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "@firebase-config";
 
 export default function BestRecipes() {
+  const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -67,12 +69,13 @@ export default function BestRecipes() {
           filteredRecipes.map((recipe) => (
             <RecipeCard
               key={recipe.id}
+              id={recipe.id}
               title={recipe.title}
               description={recipe.description}
               image={recipe.image || 'https://placehold.co/400'}
               difficulty={recipe.difficulty}
               cost={recipe.cost}
-              onClick={() => console.log(`Recette sélectionnée: ${recipe.title}`)}
+              onClick={() => navigate(`/recipe/${recipe.id}`)}
             />
           ))
         ) : (

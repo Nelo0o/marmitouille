@@ -1,9 +1,64 @@
 import "./RecipeCard.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@firebase-config";
 
-export default function RecipeCard({ title, image, description, onClick, difficulty, cost, actions }) {
+export default function RecipeCard({ title, image, description, onClick, difficulty, cost, actions, id }) {
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  
+  useEffect(() => {
+    const fetchRatings = async () => {
+      if (!id) return;
+      
+      try {
+        const reviewsQuery = query(
+          collection(db, "reviews"),
+          where("recipeId", "==", id)
+        );
+        
+        const querySnapshot = await getDocs(reviewsQuery);
+        const ratings = [];
+        
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.rating) {
+            ratings.push(data.rating);
+          }
+        });
+        
+        if (ratings.length > 0) {
+          const sum = ratings.reduce((acc, rating) => acc + rating, 0);
+          setAverageRating(parseFloat((sum / ratings.length).toFixed(1)));
+          setReviewCount(ratings.length);
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération des notes:", err);
+      }
+    };
+    
+    fetchRatings();
+  }, [id]);
+  
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className={`recipe-card__star ${i <= rating ? 'filled' : ''}`}>
+          ★
+        </span>
+      );
+    }
+    
+    return (
+      <div className="recipe-card__stars">
+        {stars}
+        <span className="recipe-card__rating-count">({reviewCount})</span>
+      </div>
+    );
+  };
   
   const handleImageError = () => {
     setImageError(true);
@@ -58,12 +113,16 @@ export default function RecipeCard({ title, image, description, onClick, difficu
       <div className="recipe-card__content">
         <h3 className="recipe-card__title">{title}</h3>
         
-        {difficultyInfo.emoji && (
-          <div className={difficultyInfo.className}>
-            <span className="recipe-card__difficulty-emoji">{difficultyInfo.emoji}</span>
-            <span className="recipe-card__difficulty-label">{difficultyInfo.label}</span>
-          </div>
-        )}
+        <div className="recipe-card__meta">
+          {renderStars(averageRating)}
+          
+          {difficultyInfo.emoji && (
+            <div className={difficultyInfo.className}>
+              <span className="recipe-card__difficulty-emoji">{difficultyInfo.emoji}</span>
+              <span className="recipe-card__difficulty-label">{difficultyInfo.label}</span>
+            </div>
+          )}
+        </div>
         
         <p className="recipe-card__description">{description}</p>
         

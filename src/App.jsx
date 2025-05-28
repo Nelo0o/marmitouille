@@ -3,6 +3,7 @@ import Login from "@pages/Login/Login";
 import Register from "@pages/Register/Register";
 import Profile from "@pages/Profile/Profile";
 import MyRecipes from "@pages/MyRecipes/MyRecipes";
+import Recipe from "@pages/Recipe/Recipe";
 import { Routes, Route } from "react-router-dom";
 import Header from "@components/atoms/Header/Header";
 
@@ -16,6 +17,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-recipes" element={<MyRecipes />} />
+        <Route path="/recipe/:id" element={<Recipe />} />
       </Routes>
     </>
   );
