@@ -7,10 +7,12 @@ import Recipe from "@pages/Recipe/Recipe";
 import { Routes, Route } from "react-router-dom";
 import Header from "@components/atoms/Header/Header";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   return (
     <>
+      <Analytics />
       <SpeedInsights />
       <Header />
       <Routes>
