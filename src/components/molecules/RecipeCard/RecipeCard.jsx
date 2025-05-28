@@ -1,9 +1,9 @@
 import "./RecipeCard.scss";
 import { useState, useEffect } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@firebase-config";
+import { useReviewService } from "@services/ServiceProvider";
 
 export default function RecipeCard({ title, image, description, onClick, difficulty, cost, actions, id }) {
+  const reviewService = useReviewService();
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [averageRating, setAverageRating] = useState(0);
@@ -14,33 +14,16 @@ export default function RecipeCard({ title, image, description, onClick, difficu
       if (!id) return;
       
       try {
-        const reviewsQuery = query(
-          collection(db, "reviews"),
-          where("recipeId", "==", id)
-        );
-        
-        const querySnapshot = await getDocs(reviewsQuery);
-        const ratings = [];
-        
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.rating) {
-            ratings.push(data.rating);
-          }
-        });
-        
-        if (ratings.length > 0) {
-          const sum = ratings.reduce((acc, rating) => acc + rating, 0);
-          setAverageRating(parseFloat((sum / ratings.length).toFixed(1)));
-          setReviewCount(ratings.length);
-        }
+        const { averageRating: avgRating, reviewCount: count } = await reviewService.getAverageRatingForRecipe(id);
+        setAverageRating(avgRating);
+        setReviewCount(count);
       } catch (err) {
         console.error("Erreur lors de la récupération des notes:", err);
       }
     };
     
     fetchRatings();
-  }, [id]);
+  }, [id, reviewService]);
   
   const renderStars = (rating) => {
     const stars = [];

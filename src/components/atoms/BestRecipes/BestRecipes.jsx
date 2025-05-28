@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecipeService } from "@services/ServiceProvider";
 import "./BestRecipes.scss";
 import RecipeCard from "@molecules/RecipeCard/RecipeCard";
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
-import { db } from "@firebase-config";
 
 export default function BestRecipes() {
   const navigate = useNavigate();
+  const recipeService = useRecipeService();
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -15,19 +15,8 @@ export default function BestRecipes() {
     const fetchRecipes = async () => {
       try {
         setLoading(true);
-        const recipesQuery = query(
-          collection(db, "recipes"),
-          orderBy("title"),
-          limit(20)
-        );
-        
-        const snapshot = await getDocs(recipesQuery);
-        const recipesData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        setRecipes(recipesData);
+        const recipesData = await recipeService.getAllRecipes();
+        setRecipes(recipesData.slice(0, 20));
       } catch (error) {
         console.error("Erreur lors de la récupération des recettes:", error);
       } finally {
@@ -36,7 +25,7 @@ export default function BestRecipes() {
     };
 
     fetchRecipes();
-  }, []);
+  }, [recipeService]);
 
   const filteredRecipes = recipes.filter((recipe) =>
     `${recipe.title} ${recipe.description}`

@@ -1,22 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@context/AuthContext";
+import { useRecipeService } from "@services/ServiceProvider";
 import RecipeCard from "@molecules/RecipeCard/RecipeCard";
 import ConfirmDialog from "@atoms/ConfirmDialog/ConfirmDialog";
 import "./RecipeManager.scss";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { db } from "@firebase-config";
 
 export default function RecipeManager() {
   const { currentUser } = useAuth();
+  const recipeService = useRecipeService();
   const [recipes, setRecipes] = useState([]);
   const [editing, setEditing] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -62,21 +53,20 @@ export default function RecipeManager() {
     setEditing(null);
   };
 
-  // Charger les recettes utilisateur depuis Firestore
+  // Charger les recettes utilisateur
   useEffect(() => {
     const fetchRecipes = async () => {
       if (!currentUser) return;
-      const q = query(
-        collection(db, "recipes"),
-        where("ownerId", "==", currentUser.uid)
-      );
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setRecipes(data);
+      try {
+        const data = await recipeService.getUserRecipes(currentUser.uid);
+        setRecipes(data);
+      } catch (error) {
+        console.error("Erreur lors du chargement des recettes:", error);
+      }
     };
 
     fetchRecipes();
-  }, [currentUser]);
+  }, [currentUser, recipeService]);
 
   // Ajouter ou modifier une recette
   const handleSubmit = async (e) => {
@@ -89,19 +79,20 @@ export default function RecipeManager() {
       ownerEmail: currentUser.email,
     };
 
-    if (editing) {
-      await updateDoc(doc(db, "recipes", editing.id), recipeData);
-      setRecipes((prev) =>
-        prev.map((r) =>
-          r.id === editing.id ? { id: editing.id, ...recipeData } : r
-        )
-      );
-    } else {
-      const docRef = await addDoc(collection(db, "recipes"), recipeData);
-      setRecipes((prev) => [...prev, { id: docRef.id, ...recipeData }]);
+    try {
+      if (editing) {
+        const updatedRecipe = await recipeService.updateRecipe(editing.id, recipeData);
+        setRecipes((prev) =>
+          prev.map((r) => r.id === editing.id ? updatedRecipe : r)
+        );
+      } else {
+        const newRecipe = await recipeService.addRecipe(recipeData);
+        setRecipes((prev) => [...prev, newRecipe]);
+      }
+      resetForm();
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de la recette:", error);
     }
-
-    resetForm();
   };
 
   // Ouvrir la modale de confirmation pour supprimer une recette
@@ -114,9 +105,14 @@ export default function RecipeManager() {
   const handleDelete = async () => {
     if (!recipeToDelete) return;
     
-    await deleteDoc(doc(db, "recipes", recipeToDelete.id));
-    setRecipes((prev) => prev.filter((r) => r.id !== recipeToDelete.id));
-    setRecipeToDelete(null);
+    try {
+      await recipeService.deleteRecipe(recipeToDelete.id);
+      setRecipes((prev) => prev.filter((r) => r.id !== recipeToDelete.id));
+      setRecipeToDelete(null);
+      setDeleteConfirmOpen(false);
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la recette:", error);
+    }
   };
 
   const handleEdit = (recipe) => {

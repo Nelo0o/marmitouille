@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@context/AuthContext";
-import { db } from "@firebase-config";
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp } from "firebase/firestore";
+import { useReviewService } from "@services/ServiceProvider";
 import "./RecipeReviews.scss";
 
 export default function RecipeReviews({ recipeId }) {
     const { currentUser } = useAuth();
+    const reviewService = useReviewService();
     const [reviews, setReviews] = useState([]);
     const [userReview, setUserReview] = useState(null);
     const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
@@ -20,37 +20,16 @@ export default function RecipeReviews({ recipeId }) {
         const fetchReviews = async () => {
             try {
                 setLoading(true);
-                // Utiliser uniquement le filtre par recipeId sans tri pour éviter l'erreur d'index
-                const reviewsQuery = query(
-                    collection(db, "reviews"),
-                    where("recipeId", "==", recipeId)
-                );
                 
-                const querySnapshot = await getDocs(reviewsQuery);
-                const reviewsData = [];
-                
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    reviewsData.push({
-                        id: doc.id,
-                        ...data,
-                        createdAt: data.createdAt?.toDate() || new Date()
-                    });
-
-                    // Vérifier si l'utilisateur actuel a déjà un commentaire
-                    if (currentUser && data.userId === currentUser.uid) {
-                        setUserReview({
-                            id: doc.id,
-                            ...data,
-                            createdAt: data.createdAt?.toDate() || new Date()
-                        });
-                    }
-                });
-                
-                // Tri manuel des commentaires par date de création (du plus récent au plus ancien)
-                reviewsData.sort((a, b) => b.createdAt - a.createdAt);
-                
+                // Utiliser le service pour récupérer tous les commentaires
+                const reviewsData = await reviewService.getReviewsForRecipe(recipeId);
                 setReviews(reviewsData);
+                
+                // Vérifier si l'utilisateur actuel a déjà un commentaire
+                if (currentUser) {
+                    const userReviewData = await reviewService.getUserReviewForRecipe(recipeId, currentUser.uid);
+                    setUserReview(userReviewData);
+                }
             } catch (err) {
                 console.error("Erreur lors de la récupération des commentaires:", err);
                 setError("Une erreur est survenue lors du chargement des commentaires.");
@@ -60,7 +39,7 @@ export default function RecipeReviews({ recipeId }) {
         };
 
         fetchReviews();
-    }, [recipeId, currentUser]);
+    }, [recipeId, currentUser, reviewService]);
 
     // Gérer le changement de note
     const handleRatingChange = (rating) => {
@@ -90,21 +69,11 @@ export default function RecipeReviews({ recipeId }) {
             setLoading(true);
             
             if (isEditing && userReview) {
-                // Mettre à jour un commentaire existant
-                const reviewRef = doc(db, "reviews", userReview.id);
-                await updateDoc(reviewRef, {
+                // Mettre à jour un commentaire existant via le service
+                const updatedReview = await reviewService.updateReview(userReview.id, {
                     rating: newReview.rating,
-                    comment: newReview.comment,
-                    updatedAt: serverTimestamp()
+                    comment: newReview.comment
                 });
-
-                // Mettre à jour l'état local
-                const updatedReview = {
-                    ...userReview,
-                    rating: newReview.rating,
-                    comment: newReview.comment,
-                    updatedAt: new Date()
-                };
                 
                 setUserReview(updatedReview);
                 setReviews(reviews.map(review => 
@@ -112,27 +81,17 @@ export default function RecipeReviews({ recipeId }) {
                 ));
                 setIsEditing(false);
             } else {
-                // Ajouter un nouveau commentaire
+                // Ajouter un nouveau commentaire via le service
                 const newReviewData = {
                     recipeId,
                     userId: currentUser.uid,
                     userName: currentUser.displayName || "Utilisateur",
                     userPhotoURL: currentUser.photoURL || "",
                     rating: newReview.rating,
-                    comment: newReview.comment,
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
+                    comment: newReview.comment
                 };
 
-                const docRef = await addDoc(collection(db, "reviews"), newReviewData);
-                
-                // Mettre à jour l'état local
-                const addedReview = {
-                    id: docRef.id,
-                    ...newReviewData,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                };
+                const addedReview = await reviewService.addReview(newReviewData);
                 
                 setUserReview(addedReview);
                 setReviews([addedReview, ...reviews]);
@@ -177,7 +136,8 @@ export default function RecipeReviews({ recipeId }) {
 
         try {
             setLoading(true);
-            await deleteDoc(doc(db, "reviews", userReview.id));
+            // Utiliser le service pour supprimer le commentaire
+            await reviewService.deleteReview(userReview.id);
             
             // Mettre à jour l'état local
             setReviews(reviews.filter(review => review.id !== userReview.id));

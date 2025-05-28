@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { useAuth } from "@context/AuthContext";
-import { db } from "@firebase-config";
+import { useRecipeService, useReviewService } from "@services/ServiceProvider";
 import RecipeReviews from "@components/molecules/RecipeReviews/RecipeReviews";
 import "./Recipe.scss";
 
@@ -10,6 +9,8 @@ export default function Recipe() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const recipeService = useRecipeService();
+  const reviewService = useReviewService();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,12 +21,15 @@ export default function Recipe() {
     const fetchRecipe = async () => {
       try {
         setLoading(true);
-        const recipeDoc = await getDoc(doc(db, "recipes", id));
-        
-        if (recipeDoc.exists()) {
-          setRecipe({ id: recipeDoc.id, ...recipeDoc.data() });
-        } else {
-          setError("Cette recette n'existe pas.");
+        try {
+          const recipeData = await recipeService.getRecipeById(id);
+          setRecipe(recipeData);
+        } catch (err) {
+          if (err.message === "Recette non trouvée") {
+            setError("Cette recette n'existe pas.");
+          } else {
+            throw err;
+          }
         }
       } catch (err) {
         console.error("Erreur lors de la récupération de la recette:", err);
@@ -38,7 +42,7 @@ export default function Recipe() {
     if (id) {
       fetchRecipe();
     }
-  }, [id]);
+  }, [id, recipeService]);
   
   // Récupérer les notes pour calculer la moyenne
   useEffect(() => {
@@ -46,33 +50,16 @@ export default function Recipe() {
       if (!id) return;
       
       try {
-        const reviewsQuery = query(
-          collection(db, "reviews"),
-          where("recipeId", "==", id)
-        );
-        
-        const querySnapshot = await getDocs(reviewsQuery);
-        const ratings = [];
-        
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.rating) {
-            ratings.push(data.rating);
-          }
-        });
-        
-        if (ratings.length > 0) {
-          const sum = ratings.reduce((acc, rating) => acc + rating, 0);
-          setAverageRating(parseFloat((sum / ratings.length).toFixed(1)));
-          setReviewCount(ratings.length);
-        }
+        const { averageRating: avgRating, reviewCount: count } = await reviewService.getAverageRatingForRecipe(id);
+        setAverageRating(avgRating);
+        setReviewCount(count);
       } catch (err) {
         console.error("Erreur lors de la récupération des notes:", err);
       }
     };
     
     fetchRatings();
-  }, [id]);
+  }, [id, reviewService]);
 
   const getDifficultyInfo = (diff) => {
     if (!diff) return { emoji: '', className: '' };
