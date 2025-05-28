@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent  } from '@testing-library/react'
 import { describe, it, expect, vi } from "vitest"
 import { BrowserRouter } from "react-router-dom"
 import { useAuth } from "../../../context/AuthContext"
@@ -19,7 +19,7 @@ describe("Header component", () => {
     
         renderWithRouter(<Header />);
         
-        expect(screen.getByTestId("navLinkLogo")).toHaveTextContent("MARMITOUILLE");
+        expect(screen.getByTestId("navLinkLogo")).toHaveTextContent("Marmitouille");
     });
 
     it("should test the nav display when user is null", () => {
@@ -35,8 +35,11 @@ describe("Header component", () => {
       useAuth.mockReturnValue({ currentUser: {uid: "uidMock",displayName: "totoMock"}, logout: vi.fn() });
   
       renderWithRouter(<Header />);
+
+      const button = screen.getByTestId("buttonInfoAccount");
+      fireEvent.click(button);
       
-      expect(screen.getByTestId("spanWelcome")).toHaveTextContent("Bienvenue, totoMock");
-      expect(screen.getByTestId("buttonLogout")).toHaveTextContent("Déconnexion");
+      expect(screen.getByTestId("spanWelcome")).toHaveTextContent("totoMock");
+      expect(screen.getByTestId("coucou")).toHaveTextContent("Déconnexion");
     });
 });

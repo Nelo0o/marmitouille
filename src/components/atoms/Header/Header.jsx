@@ -26,8 +26,8 @@ export default function Header() {
   return (
     <>
       <header className="header">
-        <div className="header-left">
-          <NavLink data-testId="navLinkLogo" to="/" className="logo">
+        <div data-testId="navLinkLogo" className="header-left">
+          <NavLink  to="/" className="logo">
             Marmitouille
           </NavLink>
         </div>
@@ -44,6 +44,7 @@ export default function Header() {
           ) : (
             <div className="user-menu" ref={popoverRef}>
               <button 
+                data-testId="buttonInfoAccount"
                 className="user-menu__button" 
                 onClick={() => setIsPopoverOpen(!isPopoverOpen)}
                 aria-expanded={isPopoverOpen}
@@ -73,7 +74,7 @@ export default function Header() {
                     Mes recettes
                   </NavLink>
                   <button 
-                    data-testId="buttonLogout"
+                    data-testId="coucou"
                     className="user-menu__item user-menu__logout" 
                     onClick={() => {
                       setShowLogoutConfirm(true);

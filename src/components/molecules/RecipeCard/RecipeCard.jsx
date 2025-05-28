@@ -40,6 +40,7 @@ export default function RecipeCard({ title, image, description, onClick, difficu
   
   return (
     <div 
+      data-testid="recipeCard"
       className={`recipe-card ${isHovered ? 'recipe-card--hovered' : ''}`} 
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -47,6 +48,7 @@ export default function RecipeCard({ title, image, description, onClick, difficu
     >
       <div className="recipe-card__image-container">
         <img 
+          data-testid="recipeImage"
           src={imageError ? 'https://via.placeholder.com/300x200?text=Image+non+disponible' : image} 
           alt={title} 
           className="recipe-card__image" 
@@ -56,7 +58,7 @@ export default function RecipeCard({ title, image, description, onClick, difficu
       </div>
       
       <div className="recipe-card__content">
-        <h3 className="recipe-card__title">{title}</h3>
+        <h3 data-testid="recipeTitle" className="recipe-card__title">{title}</h3>
         
         {difficultyInfo.emoji && (
           <div className={difficultyInfo.className}>
@@ -65,7 +67,7 @@ export default function RecipeCard({ title, image, description, onClick, difficu
           </div>
         )}
         
-        <p className="recipe-card__description">{description}</p>
+        <p data-testid="recipeDescription" className="recipe-card__description">{description}</p>
         
         <div className="recipe-card__footer">
           {!actions && (
