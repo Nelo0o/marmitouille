@@ -6,10 +6,12 @@ import MyRecipes from "@pages/MyRecipes/MyRecipes";
 import Recipe from "@pages/Recipe/Recipe";
 import { Routes, Route } from "react-router-dom";
 import Header from "@components/atoms/Header/Header";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   return (
     <>
+      <SpeedInsights />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
