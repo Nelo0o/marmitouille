@@ -44,7 +44,7 @@ describe("Register", () => {
     fireEvent.change(emailInput, { target: { value: "test@example.com" } });
     fireEvent.change(passwordInput, { target: { value: "password123" } });
     
-    await fireEvent.click(submitButton);
+    fireEvent.click(submitButton);
 
     expect(mockSignup).toHaveBeenCalledWith(
       "test@example.com",

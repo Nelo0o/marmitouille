@@ -42,7 +42,7 @@ describe("RecipeCard component", () => {
 
   it("should call onClick when the card is clicked", () => {
     render(<RecipeCard {...mockProps} />);
-    const card = screen.getByRole("heading").closest("div.recipe-card");
+    const card = screen.getByRole("button", { name: mockProps.title });
     fireEvent.click(card);
     expect(mockProps.onClick).toHaveBeenCalledTimes(1);
   });
@@ -84,7 +84,7 @@ describe("RecipeCard component", () => {
 
   it("should add hovered class on mouse enter and remove on mouse leave", () => {
     render(<RecipeCard {...mockProps} />);
-    const card = screen.getByRole("heading").closest("div.recipe-card");
+    const card = screen.getByRole("button", { name: mockProps.title });
 
     fireEvent.mouseEnter(card);
     expect(card.className).toContain("recipe-card--hovered");

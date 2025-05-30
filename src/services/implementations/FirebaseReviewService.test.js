@@ -77,29 +77,21 @@ describe('FirebaseReviewService', () => {
     }
   ];
   
-  const createMockQuerySnapshot = (reviews) => {
-    return {
-      empty: reviews.length === 0,
-      docs: reviews.map(review => ({
-        id: review.id,
-        data: () => {
-          const { id, ...data } = review;
-          return data;
-        }
-      })),
-      forEach: (callback) => {
-        reviews.forEach((review) => {
-          callback({
-            id: review.id,
-            data: () => {
-              const { id, ...data } = review;
-              return data;
-            }
-          });
-        });
-      }
-    };
-  };
+  const createDocumentSnapshot = (review) => ({
+    id: review.id,
+    data: () => {
+      const { id, ...data } = review;
+      return data;
+    }
+  });
+
+  const createMockQuerySnapshot = (reviews) => ({
+    empty: reviews.length === 0,
+    docs: reviews.map(createDocumentSnapshot),
+    forEach: (callback) => {
+      reviews.forEach(review => callback(createDocumentSnapshot(review)));
+    }
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
