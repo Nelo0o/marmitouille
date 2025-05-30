@@ -75,9 +75,18 @@ export default function RecipeReviews({ recipeId }) {
                     comment: newReview.comment
                 });
                 
-                setUserReview(updatedReview);
+                // Préserver les informations de l'auteur et la date de création
+                const completeUpdatedReview = {
+                    ...updatedReview,
+                    userName: userReview.userName,
+                    userPhotoURL: userReview.userPhotoURL,
+                    createdAt: userReview.createdAt,
+                    userId: userReview.userId
+                };
+                
+                setUserReview(completeUpdatedReview);
                 setReviews(reviews.map(review => 
-                    review.id === userReview.id ? updatedReview : review
+                    review.id === userReview.id ? completeUpdatedReview : review
                 ));
                 setIsEditing(false);
             } else {

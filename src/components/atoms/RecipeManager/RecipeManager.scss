@@ -205,7 +205,7 @@
     gap: $spacing-lg;
     
     .recipe-item {
-      // Simplement un conteneur sans style visuel
+      display: contents;
       height: 100%;
     }
   }

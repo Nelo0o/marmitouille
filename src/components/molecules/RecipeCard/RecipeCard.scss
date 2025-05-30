@@ -13,6 +13,7 @@
   cursor: pointer;
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: left;
   
   &--hovered {
     transform: translateY(-8px);

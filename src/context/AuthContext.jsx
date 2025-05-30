@@ -26,7 +26,12 @@ export const AuthProvider = ({ children }) => {
   const signup = async (email, password, displayName) => {
     setError("");
     const result = await authService.signup(email, password, displayName);
-    if (!result.success) {
+    if (result.success) {
+      setCurrentUser({
+        ...result.user,
+        displayName
+      });
+    } else {
       setError(result.error);
     }
     return result;
