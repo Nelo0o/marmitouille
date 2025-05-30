@@ -8,7 +8,7 @@ export default function Hero({ title, subtitle, backgroundImage }) {
     : {};
 
   return (
-    <section className="hero" style={defaultStyle}>
+    <section className="hero" style={defaultStyle} role="banner">
       <div className="hero__content">
         <h1 className="hero__title">{title}</h1>
         {subtitle && <p className="hero__subtitle">{subtitle}</p>}

@@ -8,7 +8,6 @@ import "./Recipe.scss";
 export default function Recipe() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
   const recipeService = useRecipeService();
   const reviewService = useReviewService();
   const [recipe, setRecipe] = useState(null);

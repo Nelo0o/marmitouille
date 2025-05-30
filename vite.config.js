@@ -22,4 +22,10 @@ export default defineConfig({
       '@firebase-config': path.resolve(__dirname, './src/firebase.js'),
     },
   },
+
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/setupTest.js' 
+  },
 });

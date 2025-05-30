@@ -25,7 +25,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="header">
+      <header className="header" role="header">
         <div className="header-left">
           <NavLink to="/" className="logo">
             Marmitouille
