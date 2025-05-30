@@ -26,3 +26,6 @@ dist-ssr
 .env
 
 coverage
+sonar-project.properties
+.sonar_lock
+report-task.txt

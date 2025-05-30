@@ -1,5 +1,6 @@
 import "./RecipeCard.scss";
 import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import { useReviewService } from "@services/ServiceProvider";
 
 export default function RecipeCard({ title, image, description, onClick, difficulty, cost, actions, id }) {
@@ -77,11 +78,13 @@ export default function RecipeCard({ title, image, description, onClick, difficu
   const difficultyInfo = getDifficultyInfo(difficulty);
   
   return (
-    <div 
+    <button 
       className={`recipe-card ${isHovered ? 'recipe-card--hovered' : ''}`} 
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      aria-label={title}
+      type="button"
     >
       <div className="recipe-card__image-container">
         <img 
@@ -127,6 +130,17 @@ export default function RecipeCard({ title, image, description, onClick, difficu
           </div>
         )}
       </div>
-    </div>
+    </button>
   );
 }
+
+RecipeCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  difficulty: PropTypes.string.isRequired,
+  cost: PropTypes.string.isRequired,
+  actions: PropTypes.node,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+};
