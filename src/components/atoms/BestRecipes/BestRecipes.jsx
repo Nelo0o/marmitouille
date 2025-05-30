@@ -45,7 +45,7 @@ export default function BestRecipes() {
   return (
     <section className="best-recipes">
       <div className="best-recipes__header">
-        <h2 className="best-recipes__title">Les meilleures recettes</h2>
+        <h2 data-testId="bestRecipesTitle" className="best-recipes__title">Les meilleures recettes</h2>
         <div className="best-recipes__search-container">
           <input
             type="text"

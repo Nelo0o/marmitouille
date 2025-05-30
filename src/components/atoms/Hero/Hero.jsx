@@ -8,10 +8,10 @@ export default function Hero({ title, subtitle, backgroundImage }) {
     : {};
 
   return (
-    <section className="hero" style={defaultStyle}>
+    <section data-testId="heroSection" className="hero" style={defaultStyle}>
       <div className="hero__content">
-        <h1 className="hero__title">{title}</h1>
-        {subtitle && <p className="hero__subtitle">{subtitle}</p>}
+        <h1 data-testId="heroTitle" className="hero__title">{title}</h1>
+        {subtitle && <p data-testId="heroSubTitle" className="hero__subtitle">{subtitle}</p>}
       </div>
     </section>
   );

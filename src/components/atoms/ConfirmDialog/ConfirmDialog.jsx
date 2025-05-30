@@ -33,7 +33,7 @@ export default function ConfirmDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="confirm-dialog__overlay">
+    <div data-testid="confirmPopUp" className="confirm-dialog__overlay">
       <div className="confirm-dialog" ref={dialogRef}>
         <div className="confirm-dialog__header">
           <h3 className="confirm-dialog__title">{title}</h3>
@@ -49,6 +49,7 @@ export default function ConfirmDialog({
             {cancelText}
           </button>
           <button 
+            data-testid="confirmSupp"
             className="confirm-dialog__button confirm-dialog__button--confirm" 
             onClick={() => {
               onConfirm();

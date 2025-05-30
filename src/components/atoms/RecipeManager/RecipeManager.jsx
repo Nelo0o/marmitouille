@@ -134,12 +134,13 @@ export default function RecipeManager() {
 
   return (
     <div className="recipe-manager">
-      <h2>{editing ? "Modifier une recette" : "Ajouter une nouvelle recette"}</h2>
+      <h2 data-testId="modOrAddRecipe">{editing ? "Modifier une recette" : "Ajouter une nouvelle recette"}</h2>
 
       <form className="recipe-form" onSubmit={handleSubmit}>
         <div className="form-section">
           <label htmlFor="title">Nom de la recette</label>
           <input
+            data-testId="titleRecipe"
             id="title"
             name="title"
             value={form.title}
@@ -163,6 +164,7 @@ export default function RecipeManager() {
         <div className="form-section">
           <label htmlFor="description">Description</label>
           <textarea
+            data-testId="descRecipe"
             id="description"
             name="description"
             value={form.description}
@@ -254,7 +256,7 @@ export default function RecipeManager() {
         </div>
 
         <div className="form-buttons">
-          <button type="submit" className="primary-button">
+          <button data-testId="buttonSubmitRecipe" type="submit" className="primary-button">
             {editing ? "Enregistrer les modifications" : "Ajouter cette recette"}
           </button>
           {editing && (
@@ -277,7 +279,7 @@ export default function RecipeManager() {
               <path d="M9 18h6"></path>
               <path d="M10 22h4"></path>
             </svg>
-            <p>Vous n'avez pas encore créé de recettes.</p>
+            <p data-testId="noRecipe">Vous n'avez pas encore créé de recettes.</p>
             <p>Commencez par ajouter votre première recette ci-dessus !</p>
           </div>
         )}
@@ -302,7 +304,9 @@ export default function RecipeManager() {
                     </svg>
                     Modifier
                   </button>
-                  <button onClick={(e) => {
+                  <button
+                  data-testId="suppRecipe"
+                  onClick={(e) => {
                     e.stopPropagation();
                     confirmDelete(r);
                   }} className="delete-button">

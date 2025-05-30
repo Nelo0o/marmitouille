@@ -19,7 +19,7 @@ export default function Login() {
     <div className="auth-container login-page">
       <div className="auth-card">
         <div className="auth-card__header">
-          <h2 className="auth-card__title font-script">Connexion</h2>
+          <h2 data-testId="labelConnexion" className="auth-card__title font-script">Connexion</h2>
           <p className="auth-card__subtitle">Accédez à vos recettes préférées</p>
         </div>
         
@@ -32,6 +32,7 @@ export default function Login() {
                 <polyline points="22,6 12,13 2,6"></polyline>
               </svg>
               <input 
+                data-testId="inputMail"
                 type="email" 
                 id="email" 
                 name="email" 
@@ -50,6 +51,7 @@ export default function Login() {
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
               <input 
+                data-testId="inputPassword"
                 type="password" 
                 id="password" 
                 name="password" 
@@ -64,7 +66,7 @@ export default function Login() {
             <a href="#" className="auth-form__forgot-link">Mot de passe oublié ?</a>
           </div>
           
-          <button type="submit" className="auth-form__submit">Se connecter</button>
+          <button data-testId="inputSubmit" type="submit" className="auth-form__submit">Se connecter</button>
           
           <div className="auth-form__separator">
             <span>ou</span>
@@ -81,7 +83,7 @@ export default function Login() {
         </form>
         
         <div className="auth-card__footer">
-          <p>Pas encore de compte ? <Link to="/register" className="auth-card__link">S'inscrire</Link></p>
+          <p data-testId="linkSignUp">Pas encore de compte ? <Link to="/register" className="auth-card__link">S'inscrire</Link></p>
         </div>
       </div>
       

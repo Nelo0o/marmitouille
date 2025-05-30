@@ -46,7 +46,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 
 const wrapper = ({ children }) => <AuthProvider>{children}</AuthProvider>;
 
-describe("AuthContext", () => {
+describe("AuthContext component", () => {
     beforeEach(() => {
         vi.clearAllMocks();
       
